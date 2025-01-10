@@ -63,6 +63,8 @@ export interface NginxSettings {
 export interface NodeSettings {
   name: string
   secret: string
+  icp_number: string
+  public_security_number: string
 }
 
 export interface OpenaiSettings {
@@ -70,6 +72,7 @@ export interface OpenaiSettings {
   base_url: string
   proxy: string
   token: string
+  api_type: string
 }
 
 export interface TerminalSettings {
