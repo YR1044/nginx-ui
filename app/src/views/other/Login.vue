@@ -2,6 +2,7 @@
 import auth from '@/api/auth'
 import install from '@/api/install'
 import passkey from '@/api/passkey'
+import ICP from '@/components/ICP/ICP.vue'
 import SetLanguage from '@/components/SetLanguage/SetLanguage.vue'
 import SwitchAppearance from '@/components/SwitchAppearance/SwitchAppearance.vue'
 import Authorization from '@/components/TwoFA/Authorization.vue'
@@ -23,7 +24,7 @@ install.get_lock().then(async (r: { lock: boolean }) => {
 
 const loading = ref(false)
 const enabled2FA = ref(false)
-const refOTP = ref()
+const refOTP = useTemplateRef('refOTP')
 const passcode = ref('')
 const recoveryCode = ref('')
 const passkeyConfigStatus = ref(false)
@@ -72,23 +73,8 @@ function onSubmit() {
           break
       }
     }).catch(e => {
-      switch (e.code) {
-        case 4031:
-          message.error($gettext('Incorrect username or password'))
-          break
-        case 4291:
-          message.error($gettext('Too many login failed attempts, please try again later'))
-          break
-        case 4033:
-          message.error($gettext('User is banned'))
-          break
-        case 4034:
-          refOTP.value?.clearInput()
-          message.error($gettext('Invalid 2FA or recovery code'))
-          break
-        default:
-          message.error($gettext(e.message ?? 'Server error'))
-          break
+      if (e.code === 4043) {
+        refOTP.value?.clearInput()
       }
     })
     loading.value = false
@@ -117,9 +103,6 @@ auth.get_casdoor_uri()
       casdoor_uri.value = r.uri
     }
   })
-  .catch(e => {
-    message.error($gettext(e.message ?? 'Server error'))
-  })
 
 function loginWithCasdoor() {
   window.location.href = casdoor_uri.value
@@ -133,8 +116,6 @@ if (route.query?.code !== undefined && route.query?.state !== undefined) {
     const next = (route.query?.next || '').toString() || '/'
 
     await router.push(next)
-  }).catch(e => {
-    message.error($gettext(e.message ?? 'Server error'))
   })
   loading.value = false
 }
@@ -155,27 +136,23 @@ passkey.get_config_status().then(r => {
 const passkeyLoginLoading = ref(false)
 async function handlePasskeyLogin() {
   passkeyLoginLoading.value = true
-  try {
-    const begin = await auth.begin_passkey_login()
-    const asseResp = await startAuthentication({ optionsJSON: begin.options.publicKey })
 
-    const r = await auth.finish_passkey_login({
-      session_id: begin.session_id,
-      options: asseResp,
-    })
+  const begin = await auth.begin_passkey_login()
+  const asseResp = await startAuthentication({ optionsJSON: begin.options.publicKey })
 
-    if (r.token) {
-      const next = (route.query?.next || '').toString() || '/'
+  const r = await auth.finish_passkey_login({
+    session_id: begin.session_id,
+    options: asseResp,
+  })
 
-      passkeyLogin(asseResp.rawId, r.token)
-      secureSessionId.value = r.secure_session_id
-      await router.push(next)
-    }
+  if (r.token) {
+    const next = (route.query?.next || '').toString() || '/'
+
+    passkeyLogin(asseResp.rawId, r.token)
+    secureSessionId.value = r.secure_session_id
+    await router.push(next)
   }
-  // eslint-disable-next-line ts/no-explicit-any
-  catch (e: any) {
-    message.error($gettext(e.message ?? 'Server error'))
-  }
+
   passkeyLoginLoading.value = false
 }
 </script>
@@ -228,6 +205,7 @@ async function handlePasskeyLogin() {
                   enabled: true,
                   otp_status: true,
                   passkey_status: false,
+                  recovery_codes_generated: true,
                 }"
                 @submit-o-t-p="handleOTPSubmit"
               />
@@ -266,7 +244,10 @@ async function handlePasskeyLogin() {
             </AFormItem>
           </AForm>
           <div class="footer">
-            <p>Copyright © 2021 - {{ thisYear }} Nginx UI</p>
+            <p class="mb-4">
+              Copyright © 2021 - {{ thisYear }} Nginx UI
+            </p>
+            <ICP class="mb-4" />
             Language
             <SetLanguage class="inline" />
             <div class="flex justify-center mt-4">
@@ -295,7 +276,7 @@ async function handlePasskeyLogin() {
   height: 100vh;
 
   .login-form {
-    max-width: 400px;
+    max-width: 420px;
     width: 80%;
 
     .project-title {
@@ -313,7 +294,7 @@ async function handlePasskeyLogin() {
     }
 
     .footer {
-      padding: 30px;
+      padding: 30px 20px;
       text-align: center;
       font-size: 14px;
     }

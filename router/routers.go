@@ -1,14 +1,21 @@
 package router
 
 import (
+	"net/http"
+
+	"github.com/gin-contrib/pprof"
+
 	"github.com/0xJacky/Nginx-UI/api/analytic"
 	"github.com/0xJacky/Nginx-UI/api/certificate"
 	"github.com/0xJacky/Nginx-UI/api/cluster"
 	"github.com/0xJacky/Nginx-UI/api/config"
 	"github.com/0xJacky/Nginx-UI/api/nginx"
+	nginxLog "github.com/0xJacky/Nginx-UI/api/nginx_log"
 	"github.com/0xJacky/Nginx-UI/api/notification"
 	"github.com/0xJacky/Nginx-UI/api/openai"
+	"github.com/0xJacky/Nginx-UI/api/public"
 	"github.com/0xJacky/Nginx-UI/api/settings"
+	"github.com/0xJacky/Nginx-UI/api/crypto"
 	"github.com/0xJacky/Nginx-UI/api/sites"
 	"github.com/0xJacky/Nginx-UI/api/streams"
 	"github.com/0xJacky/Nginx-UI/api/system"
@@ -17,19 +24,15 @@ import (
 	"github.com/0xJacky/Nginx-UI/api/upstream"
 	"github.com/0xJacky/Nginx-UI/api/user"
 	"github.com/0xJacky/Nginx-UI/internal/middleware"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/uozi-tech/cosy"
-	"net/http"
+	cSettings "github.com/uozi-tech/cosy/settings"
 )
 
 func InitRouter() {
 	r := cosy.GetEngine()
-	r.Use(
-		middleware.CacheJs(),
-		middleware.IPWhiteList(),
-		static.Serve("/", middleware.MustFs("")),
-	)
+
+	initEmbedRoute(r)
 
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -39,12 +42,17 @@ func InitRouter() {
 
 	root := r.Group("/api")
 	{
+		public.InitRouter(root)
+		crypto.InitPublicRouter(root)
 		system.InitPublicRouter(root)
 		user.InitAuthRouter(root)
 
 		// Authorization required and not websocket request
 		g := root.Group("/", middleware.AuthRequired(), middleware.Proxy())
 		{
+			if cSettings.ServerSettings.RunMode == gin.DebugMode {
+				pprof.Register(g)
+			}
 			user.InitUserRouter(g)
 			analytic.InitRouter(g)
 			user.InitManageUserRouter(g)
@@ -73,7 +81,7 @@ func InitRouter() {
 			{
 				terminal.InitRouter(o)
 			}
-			nginx.InitNginxLogRouter(w)
+			nginxLog.InitRouter(w)
 			upstream.InitRouter(w)
 			system.InitWebSocketRouter(w)
 		}

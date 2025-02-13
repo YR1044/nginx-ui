@@ -102,11 +102,15 @@ URL：[https://demo.nginxui.com](https://demo.nginxui.com)
 
 ### Internationalization
 
+We proudly offer official support for:
+
 - English
 - Simplified Chinese
 - Traditional Chinese
 
-We welcome translations into any language.
+As non-native English speakers, we strive for accuracy, but we know there’s always room for improvement. If you spot any issues, we’d love your feedback!
+
+Thanks to our amazing community, additional languages are also available! Explore and contribute to translations on [Weblate](https://weblate.nginxui.com).
 
 ### Built With
 
@@ -120,6 +124,7 @@ We welcome translations into any language.
 - [vue3-gettext](https://github.com/jshmrtn/vue3-gettext)
 - [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [Gonginx](https://github.com/tufanbarisyildirim/gonginx)
+- [lego](https://github.com/go-acme/lego)
 
 ## Getting Started
 
@@ -291,6 +296,7 @@ pnpm build
 Please build the app first, and then execute the following command in the project root directory.
 
 ```shell
+go generate
 go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/settings.buildTime=$(date +%s)'" -o nginx-ui -v main.go
 ```
 
@@ -301,7 +307,7 @@ go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/sett
 **Install and Upgrade**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) install
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ install
 ```
 The default listening port is `9000`, and the default HTTP Challenge port is `9180`.
 If there is a port conflict, please modify `/usr/local/etc/nginx-ui/app.ini` manually,
@@ -310,13 +316,13 @@ then use `systemctl restart nginx-ui` to reload the Nginx UI service.
 **Remove Nginx UI, except configuration and database files**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) remove
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ remove
 ```
 
 ### More Usage
 
 ````shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) help
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ help
 ````
 
 ## Example of Nginx Reverse Proxy Configuration

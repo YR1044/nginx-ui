@@ -15,6 +15,7 @@ const data = ref({
   sync_node_ids: [] as number[],
 })
 
+// eslint-disable-next-line vue/require-typed-ref
 const refForm = ref()
 
 function open(basePath: string, origName: string, isDir: boolean) {
@@ -40,8 +41,6 @@ function ok() {
         visible.value = false
         message.success($gettext('Rename successfully'))
         emit('renamed')
-      }).catch(e => {
-        message.error(`${$gettext('Server error')} ${e?.message}`)
       })
     })
   })

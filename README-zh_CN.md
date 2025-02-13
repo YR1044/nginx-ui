@@ -102,6 +102,7 @@ Nginx 网络管理界面，由  [0xJacky](https://jackyu.cn/) 与 [Hintay](https
 - [vue3-gettext](https://github.com/jshmrtn/vue3-gettext)
 - [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [Gonginx](https://github.com/tufanbarisyildirim/gonginx)
+- [lego](https://github.com/go-acme/lego)
 
 ## 入门指南
 
@@ -229,6 +230,7 @@ pnpm build
 请先完成前端编译，再回到项目的根目录执行以下命令。
 
 ```shell
+go generate
 go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/settings.buildTime=$(date +%s)'" -o nginx-ui -v main.go
 ```
 
@@ -239,20 +241,20 @@ go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/sett
 **安装或升级**
 
 ```shell
-bash <(curl -L -s https://mirror.ghproxy.com/https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) install -r https://mirror.ghproxy.com/
+bash -c "$(curl -L https://mirror.ghproxy.com/https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ install -r https://mirror.ghproxy.com/
 ```
 一键安装脚本默认设置的监听端口为 `9000`，HTTP Challenge 端口默认为 `9180`，如果出现端口冲突请进入 `/usr/local/etc/nginx-ui/app.ini` 修改，并使用 `systemctl restart nginx-ui` 重启 Nginx UI 服务。
 
 **卸载 Nginx UI 但保留配置和数据库文件**
 
 ```shell
-bash <(curl -L -s https://mirror.ghproxy.com/https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) remove
+bash -c "$(curl -L https://mirror.ghproxy.com/https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ remove
 ```
 
 ### 更多用法
 
 ````shell
-bash <(curl -L -s https://mirror.ghproxy.com/https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) help
+bash -c "$(curl -L https://mirror.ghproxy.com/https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ help
 ````
 
 ## Nginx 反向代理配置示例

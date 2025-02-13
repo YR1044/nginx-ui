@@ -6,13 +6,17 @@ import BatchUpgrader from '@/views/environment/BatchUpgrader.vue'
 import envColumns from '@/views/environment/envColumns'
 import { message } from 'ant-design-vue'
 
+const route = useRoute()
 const curd = ref()
+const loadingFromSettings = ref(false)
+
 function loadFromSettings() {
+  loadingFromSettings.value = true
   environment.load_from_settings().then(() => {
     curd.value.get_list()
     message.success($gettext('Load successfully'))
-  }).catch(e => {
-    message.error(`${$gettext('Server error')} ${e?.message}`)
+  }).finally(() => {
+    loadingFromSettings.value = false
   })
 }
 const selectedNodeIds = ref([])
@@ -22,6 +26,10 @@ const refUpgrader = ref()
 function batchUpgrade() {
   refUpgrader.value.open(selectedNodeIds, selectedNodes)
 }
+
+const inTrash = computed(() => {
+  return route.query.trash === 'true'
+})
 </script>
 
 <template>
@@ -30,19 +38,22 @@ function batchUpgrade() {
       ref="curd"
       v-model:selected-row-keys="selectedNodeIds"
       v-model:selected-rows="selectedNodes"
+      :scroll-x="1000"
       selection-type="checkbox"
-      :title="$gettext('Environment')"
+      :title="$gettext('Environments')"
       :api="environment"
       :columns="envColumns"
     >
       <template #beforeAdd>
-        <a @click="loadFromSettings">{{ $gettext('Load from settings') }}</a>
+        <AButton size="small" type="link" :loading="loadingFromSettings" @click="loadFromSettings">
+          {{ $gettext('Load from settings') }}
+        </AButton>
       </template>
     </StdCurd>
 
     <BatchUpgrader ref="refUpgrader" />
 
-    <FooterToolBar>
+    <FooterToolBar v-if="!inTrash">
       <ATooltip
         :title="$gettext('Please select at least one node to upgrade')"
         placement="topLeft"

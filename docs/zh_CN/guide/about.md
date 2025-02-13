@@ -71,11 +71,15 @@ Nginx UI 可在以下平台中使用：
 
 ## 国际化
 
+我们官方支持以下语言：
+
 - 英语
 - 简体中文
 - 繁体中文
 
-我们欢迎您将项目翻译成任何语言。
+由于我们并非英语母语者，尽管已尽力确保准确性，但仍可能存在改进空间。如果您发现任何问题，欢迎向我们反馈！
+
+此外，感谢我们优秀的社区提供了更多语言，欢迎访问 [Weblate](https://weblate.nginxui.com) 进行查看和贡献翻译。
 
 ## 构建基于
 
@@ -89,3 +93,4 @@ Nginx UI 可在以下平台中使用：
 - [vue3-gettext](https://github.com/jshmrtn/vue3-gettext)
 - [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [Gonginx](https://github.com/tufanbarisyildirim/gonginx)
+- [lego](https://github.com/go-acme/lego)

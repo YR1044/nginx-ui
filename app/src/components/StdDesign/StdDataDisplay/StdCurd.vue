@@ -82,6 +82,7 @@ function clearError() {
   })
 }
 
+// eslint-disable-next-line vue/require-typed-ref
 const stdEntryRef = ref()
 
 async function ok() {
@@ -98,7 +99,6 @@ async function ok() {
       get_list()
       visible.value = false
     }).catch(e => {
-      message.error($gettext(e?.message ?? 'Server error'), 5)
       Object.assign(error, e.errors)
     })
   }
@@ -125,8 +125,6 @@ function edit(id: number | string) {
     visible.value = true
     modifyMode.value = true
     editMode.value = 'modify'
-  }).catch(e => {
-    message.error($gettext(e?.message ?? 'Server error'), 5)
   })
 }
 
@@ -134,8 +132,6 @@ function view(id: number | string) {
   get(id).then(() => {
     visible.value = true
     modifyMode.value = false
-  }).catch(e => {
-    message.error($gettext(e?.message ?? 'Server error'), 5)
   })
 }
 
@@ -157,10 +153,10 @@ const modalTitle = computed(() => {
 
 const localOverwriteParams = reactive(props.overwriteParams ?? {})
 
-const stdBatchEditRef = ref()
+const stdBatchEditRef = useTemplateRef('stdBatchEditRef')
 
 async function handleClickBatchEdit(batchColumns: Column[]) {
-  stdBatchEditRef.value.showModal(batchColumns, selectedRowKeys.value, selectedRows.value)
+  stdBatchEditRef.value?.showModal(batchColumns, selectedRowKeys.value, selectedRows.value)
 }
 
 function handleBatchUpdated() {
@@ -185,7 +181,7 @@ function handleBatchUpdated() {
             v-if="!disableAdd && !inTrash"
             type="link"
             size="small"
-            @click="add"
+            @click="add()"
           >
             {{ $gettext('Add') }}
           </AButton>

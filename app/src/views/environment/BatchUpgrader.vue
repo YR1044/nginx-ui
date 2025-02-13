@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import type { Environment } from '@/api/environment'
-import type { Ref } from 'vue'
-import upgrade, { type RuntimeInfo } from '@/api/upgrade'
+import type { RuntimeInfo } from '@/api/upgrade'
+import upgrade from '@/api/upgrade'
 import websocket from '@/lib/websocket'
-import { message } from 'ant-design-vue'
 import _ from 'lodash'
 import { marked } from 'marked'
-import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const visible = ref(false)
@@ -16,9 +14,9 @@ const channel = ref('stable')
 const nodeNames = computed(() => nodes.value.map(v => v.name).join(', '))
 const loading = ref(false)
 
-const data = ref({
+const data = ref<RuntimeInfo>({
   name: '',
-}) as Ref<RuntimeInfo>
+} as RuntimeInfo)
 
 const modalVisible = ref(false)
 const modalClosable = ref(false)
@@ -32,16 +30,16 @@ const progressStrokeColor = {
   to: '#87d068',
 }
 
-const logContainer = ref()
+const logContainer = useTemplateRef('logContainer')
 function log(msg: string) {
   const para = document.createElement('p')
 
   para.appendChild(document.createTextNode($gettext(msg)))
 
-  logContainer.value.appendChild(para)
+  logContainer.value!.appendChild(para)
 
   nextTick(() => {
-    logContainer.value.scroll({ top: logContainer.value.scrollHeight, left: 0, behavior: 'smooth' })
+    logContainer.value!.scroll({ top: logContainer.value!.scrollHeight, left: 0, behavior: 'smooth' })
   })
 }
 
@@ -56,7 +54,6 @@ function getLatestRelease() {
     data.value = r
   }).catch(e => {
     getReleaseError.value = e?.message
-    message.error(e?.message ?? $gettext('Server error'))
   }).finally(() => {
     loading.value = false
   })
@@ -86,7 +83,7 @@ async function performUpgrade() {
   modalClosable.value = false
   modalVisible.value = true
   progressPercent.value = 0
-  logContainer.value.innerHTML = ''
+  logContainer.value!.innerHTML = ''
 
   log($gettext('Upgrading Nginx UI, please wait...'))
 

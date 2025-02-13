@@ -67,6 +67,7 @@ const loading = ref(true)
 const selectedRecords: Ref<Record<any, any>> = ref({})
 
 // This can be useful if there are more than one StdTable in the same page.
+// eslint-disable-next-line sonarjs/pseudo-random
 const randomId = ref(Math.random().toString(36).substring(2, 8))
 const updateFilter = ref(0)
 const init = ref(false)
@@ -180,8 +181,6 @@ function destroy(id: number | string) {
   props.api!.destroy(id, { permanent: props.inTrash }).then(() => {
     get_list()
     message.success($gettext('Deleted successfully'))
-  }).catch(e => {
-    message.error($gettext(e?.message ?? 'Server error'))
   })
 }
 
@@ -189,8 +188,6 @@ function recover(id: number | string) {
   props.api.recover(id).then(() => {
     message.success($gettext('Recovered Successfully'))
     get_list()
-  }).catch(e => {
-    message.error(e?.message ?? $gettext('Server error'))
   })
 }
 
@@ -223,8 +220,6 @@ async function _get_list() {
 
     if (r.pagination)
       Object.assign(pagination, r.pagination)
-  }).catch(e => {
-    message.error($gettext(e?.message ?? 'Server error'))
   })
 
   loading.value = false
@@ -492,10 +487,6 @@ const paginationSize = computed(() => {
             >
               {{ $gettext('View') }}
             </AButton>
-            <ADivider
-              v-if="!props.disableModify"
-              type="vertical"
-            />
           </template>
 
           <template v-if="!props.disableModify && !inTrash">
@@ -506,7 +497,6 @@ const paginationSize = computed(() => {
             >
               {{ $gettext('Modify') }}
             </AButton>
-            <ADivider type="vertical" />
           </template>
 
           <slot
@@ -543,7 +533,6 @@ const paginationSize = computed(() => {
                 {{ $gettext('Recover') }}
               </AButton>
             </APopconfirm>
-            <ADivider type="vertical" />
             <APopconfirm
               v-if="inTrash"
               :cancel-text="$gettext('No')"

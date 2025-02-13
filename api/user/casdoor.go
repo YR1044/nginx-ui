@@ -7,7 +7,7 @@ import (
 	"github.com/0xJacky/Nginx-UI/settings"
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
+	"errors"
 	"github.com/uozi-tech/cosy"
 	"gorm.io/gorm"
 	"net/http"
@@ -87,10 +87,15 @@ func CasdoorCallback(c *gin.Context) {
 }
 
 func GetCasdoorUri(c *gin.Context) {
-	endpoint := settings.CasdoorSettings.Endpoint
 	clientId := settings.CasdoorSettings.ClientId
 	redirectUri := settings.CasdoorSettings.RedirectUri
 	state := settings.CasdoorSettings.Application
+
+	endpoint := settings.CasdoorSettings.Endpoint
+	// feature request #603
+	if settings.CasdoorSettings.ExternalUrl != "" {
+		endpoint = settings.CasdoorSettings.ExternalUrl
+	}
 
 	if endpoint == "" || clientId == "" || redirectUri == "" || state == "" {
 		c.JSON(http.StatusOK, gin.H{

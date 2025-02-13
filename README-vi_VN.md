@@ -121,6 +121,7 @@ Chúng tôi hoan nghênh bản dịch sang bất kỳ ngôn ngữ nào.
 - [vue3-gettext](https://github.com/jshmrtn/vue3-gettext)
 - [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [Gonginx](https://github.com/tufanbarisyildirim/gonginx)
+- [lego](https://github.com/go-acme/lego)
 
 ## Bắt đầu
 
@@ -289,6 +290,7 @@ pnpm build
 Vui lòng build Frontend trước, sau đó thực hiện lệnh sau trong thư mục gốc của dự án.
 
 ```shell
+go generate
 go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/settings.buildTime=$(date +%s)'" -o nginx-ui -v main.go
 ```
 
@@ -299,7 +301,7 @@ go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/sett
 **Cài đặt và nâng cấp**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) install
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ install
 ```
 Port mặc định để truy cập UI là `9000`, port HTTP Challenge mặc định để xác thực SSL là `9180`.
 Nếu có xung đột port, vui lòng sửa đổi trong file `/usr/local/etc/nginx-ui/app.ini`,
@@ -308,19 +310,19 @@ hãy nhớ restart nginx-ui bằng lệnh `systemctl restart nginx-ui` mỗi khi
 **Gỡ bỏ Nginx UI nhưng giữ lại các tệp cấu hình và cơ sở dữ liệu**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) remove
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ remove
 ```
 
 **Gỡ bỏ Nginx UI đồng thời xoá các tệp cấu hình, cơ sở dữ liệu**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) remove --purge
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ remove --purge
 ```
 
 ### Trợ giúp
 
 ````shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) help
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ help
 ````
 
 ## Ví dụ về cấu hình Nginx Reverse Proxy

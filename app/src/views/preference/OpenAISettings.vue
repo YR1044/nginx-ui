@@ -1,29 +1,17 @@
 <script setup lang="ts">
 import type { Settings } from '@/api/settings'
+import { LLM_MODELS, LLM_PROVIDERS } from '@/constants/llm'
 
 const data: Settings = inject('data')!
 const errors: Record<string, Record<string, string>> = inject('errors') as Record<string, Record<string, string>>
 
-const models = shallowRef([
-  {
-    value: 'gpt-4o-mini',
-  },
-  {
-    value: 'gpt-4o',
-  },
-  {
-    value: 'gpt-4-1106-preview',
-  },
-  {
-    value: 'gpt-4',
-  },
-  {
-    value: 'gpt-4-32k',
-  },
-  {
-    value: 'gpt-3.5-turbo',
-  },
-])
+const models = LLM_MODELS.map(model => ({
+  value: model,
+}))
+
+const providers = LLM_PROVIDERS.map(provider => ({
+  value: provider,
+}))
 </script>
 
 <template>
@@ -32,7 +20,7 @@ const models = shallowRef([
       :label="$gettext('Model')"
       :validate-status="errors?.openai?.model ? 'error' : ''"
       :help="errors?.openai?.model === 'safety_text'
-        ? $gettext('The model name should only contain letters, unicode, numbers, hyphens, dashes, and dots.')
+        ? $gettext('The model name should only contain letters, unicode, numbers, hyphens, dashes, colons, and dots.')
         : ''"
     >
       <AAutoComplete
@@ -45,12 +33,13 @@ const models = shallowRef([
       :validate-status="errors?.openai?.base_url ? 'error' : ''"
       :help="errors?.openai?.base_url === 'url'
         ? $gettext('The url is invalid.')
-        : $gettext('To use a local large model, deploy it with vllm or imdeploy. '
+        : $gettext('To use a local large model, deploy it with ollama, vllm or lmdeploy. '
           + 'They provide an OpenAI-compatible API endpoint, so just set the baseUrl to your local API.')"
     >
-      <AInput
+      <AAutoComplete
         v-model:value="data.openai.base_url"
         :placeholder="$gettext('Leave blank for the default: https://api.openai.com/')"
+        :options="providers"
       />
     </AFormItem>
     <AFormItem
@@ -73,6 +62,19 @@ const models = shallowRef([
         : ''"
     >
       <AInputPassword v-model:value="data.openai.token" />
+    </AFormItem>
+    <AFormItem
+      :label="$gettext('API Type')"
+      :validate-status="errors?.openai?.apt_type ? 'error' : ''"
+    >
+      <ASelect v-model:value="data.openai.api_type">
+        <ASelectOption value="OPEN_AI">
+          OpenAI
+        </ASelectOption>
+        <ASelectOption value="AZURE">
+          Azure
+        </ASelectOption>
+      </ASelect>
     </AFormItem>
   </AForm>
 </template>

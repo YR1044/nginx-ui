@@ -105,6 +105,7 @@ Nginx 網路管理介面，由 [0xJacky](https://jackyu.cn/) 與 [Hintay](https:
 - [vue3-gettext](https://github.com/jshmrtn/vue3-gettext)
 - [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [Gonginx](https://github.com/tufanbarisyildirim/gonginx)
+- [lego](https://github.com/go-acme/lego)
 
 ## 入門指南
 
@@ -234,6 +235,7 @@ pnpm build
 請先完成前端編譯，再回到專案的根目錄執行以下命令。
 
 ```shell
+go generate
 go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/settings.buildTime=$(date +%s)'" -o nginx-ui -v main.go
 ```
 
@@ -244,7 +246,7 @@ go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/sett
 **安裝或升級**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) install
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ install
 ```
 
 一鍵安裝指令預設的監聽連接埠為 `9000`，HTTP Challenge 埠預設為 `9180`，如果出現連接埠衝突請修改 `/usr/local/etc/nginx-ui/app.ini`，並使用 `systemctl restart nginx-ui` 重啟 Nginx UI 守護行程。
@@ -252,13 +254,13 @@ bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/inst
 **解除安裝 Nginx UI 但保留設定和資料庫檔案**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) remove
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ remove
 ```
 
 ### 更多用法
 
 ````shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) help
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ help
 ````
 
 ## Nginx 反向代理設定範例

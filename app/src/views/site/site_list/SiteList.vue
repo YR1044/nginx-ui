@@ -35,8 +35,7 @@ onMounted(async () => {
         return
       }
     }
-    catch (e: any) {
-      message.error(e?.message ?? $gettext('Server error'))
+    catch {
       return
     }
   }
@@ -67,8 +66,6 @@ function destroy(site_name: string) {
     table.value.get_list()
     message.success($gettext('Delete site: %{site_name}', { site_name }))
     inspect_config.value?.test()
-  }).catch(e => {
-    message.error(e?.message ?? $gettext('Server error'))
   })
 }
 
@@ -112,6 +109,7 @@ function handleBatchUpdated() {
       :get-params="{
         site_category_id: siteCategoryId,
       }"
+      :scroll-x="1200"
       @click-edit="(r: string) => router.push({
         path: `/sites/${r}`,
       })"
@@ -134,7 +132,6 @@ function handleBatchUpdated() {
         >
           {{ $gettext('Enable') }}
         </AButton>
-        <ADivider type="vertical" />
         <AButton
           type="link"
           size="small"
@@ -142,7 +139,6 @@ function handleBatchUpdated() {
         >
           {{ $gettext('Duplicate') }}
         </AButton>
-        <ADivider type="vertical" />
         <APopconfirm
           :cancel-text="$gettext('No')"
           :ok-text="$gettext('OK')"

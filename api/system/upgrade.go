@@ -1,14 +1,16 @@
 package system
 
 import (
+	"net/http"
+	"os"
+
 	"github.com/0xJacky/Nginx-UI/api"
 	"github.com/0xJacky/Nginx-UI/internal/upgrader"
+	"github.com/0xJacky/Nginx-UI/internal/version"
 	"github.com/0xJacky/Nginx-UI/settings"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/uozi-tech/cosy/logger"
-	"net/http"
-	"os"
 )
 
 func GetRelease(c *gin.Context) {
@@ -32,13 +34,7 @@ func GetRelease(c *gin.Context) {
 }
 
 func GetCurrentVersion(c *gin.Context) {
-	curVer, err := upgrader.GetCurrentVersion()
-	if err != nil {
-		api.ErrHandler(c, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, curVer)
+	c.JSON(http.StatusOK, version.GetVersionInfo())
 }
 
 const (
@@ -103,6 +99,7 @@ func PerformCoreUpgrade(c *gin.Context) {
 		Message: "Downloading latest release",
 	})
 	progressChan := make(chan float64)
+	defer close(progressChan)
 	go func() {
 		for progress := range progressChan {
 			_ = ws.WriteJSON(CoreUpgradeResp{

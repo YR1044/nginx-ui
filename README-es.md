@@ -109,6 +109,7 @@ Aceptamos traducciones a cualquier idioma.
 - [vue3-gettext](https://github.com/jshmrtn/vue3-gettext)
 - [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [Gonginx](https://github.com/tufanbarisyildirim/gonginx)
+- [lego](https://github.com/go-acme/lego)
 
 ## Cómo empezar
 
@@ -235,6 +236,7 @@ pnpm build
 Primero compile la interfaz y luego ejecute el siguiente comando en el directorio raíz del proyecto.
 
 ```shell
+go generate
 go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/settings.buildTime=$(date +%s)'" -o nginx-ui -v main.go
 ```
 
@@ -245,7 +247,7 @@ go build -tags=jsoniter -ldflags "$LD_FLAGS -X 'github.com/0xJacky/Nginx-UI/sett
 **Instalar and Actualizar**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) install
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ install
 ```
 El puerto de escucha predeterminado es `9000` y el puerto de Desafío HTTP predeterminado es `9180`.
 Si hay un conflicto de puertos, modifique manualmente `/usr/local/etc/nginx-ui/app.ini`,
@@ -254,13 +256,13 @@ luego use `systemctl restart nginx-ui` para recargar el servicio de UI de Nginx.
 **Eliminar UI Nginx UI, excepto los archivos de configuración y la base de datos**
 
 ```shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) remove
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ remove
 ```
 
 ### Uso avanzado
 
 ````shell
-bash <(curl -L -s https://raw.githubusercontent.com/0xJacky/nginx-ui/master/install.sh) help
+bash -c "$(curl -L https://raw.githubusercontent.com/0xJacky/nginx-ui/main/install.sh)" @ help
 ````
 
 ## Ejemplo de configuración de proxy reverso de Nginx

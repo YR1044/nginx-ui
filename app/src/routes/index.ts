@@ -227,11 +227,11 @@ export const routes: RouteRecordRaw[] = [
         }],
       },
       {
-        path: 'environment',
-        name: 'Environment',
+        path: 'environments',
+        name: 'Environments',
         component: () => import('@/views/environment/Environment.vue'),
         meta: {
-          name: () => $gettext('Environment'),
+          name: () => $gettext('Environments'),
           icon: DatabaseOutlined,
           hiddenInSidebar: (): boolean => {
             const settings = useSettingsStore()
@@ -276,6 +276,13 @@ export const routes: RouteRecordRaw[] = [
           icon: InfoCircleOutlined,
         },
         children: [{
+          path: 'self_check',
+          name: 'Self Check',
+          component: () => import('@/views/system/SelfCheck/SelfCheck.vue'),
+          meta: {
+            name: () => $gettext('Self Check'),
+          },
+        }, {
           path: 'about',
           name: 'About',
           component: () => import('@/views/system/About.vue'),
